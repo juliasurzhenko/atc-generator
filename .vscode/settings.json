@@ -1,0 +1,7 @@
+{
+    "files.autoSave": "afterDelay",
+    "python.analysis.extraPaths": [
+        "./atc-generator-server/app",
+        "./atc-generator-server"
+    ]
+}
