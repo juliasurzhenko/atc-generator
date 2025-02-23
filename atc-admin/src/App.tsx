@@ -1,0 +1,27 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Home from './pages/Home';
+import Login from './pages/Login';
+// import Dashboard from './pages/Users'; // Переконайтеся, що цей компонент є наявним
+import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
+
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="users" element={<Users />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+};
+
+export default App;
