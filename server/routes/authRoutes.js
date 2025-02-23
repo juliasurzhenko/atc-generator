@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controllers/usersController');
+const authController = require('../controllers/authController');
 
 // Логін користувача
-router.post('/login', usersController.login);
+router.post('/login', authController.login);
+
+// Захищений маршрут
+// router.get('/protected', usersController.protectedRoute);
 
 module.exports = router;

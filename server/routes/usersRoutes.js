@@ -5,10 +5,6 @@ const usersController = require('../controllers/usersController');
 // Реєстрація нового користувача
 router.post('/register', usersController.register);
 
-
-// Захищений маршрут
-// router.get('/protected', usersController.protectedRoute);
-
 // Новий маршрут для отримання всіх користувачів
 router.get('/', usersController.getAllUsers);  // GET запит для отримання всіх користувачів
 
