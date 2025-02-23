@@ -5,6 +5,7 @@ import Login from './pages/Login';
 // import Dashboard from './pages/Users'; // Переконайтеся, що цей компонент є наявним
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import Programs from './pages/Programs';
 
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="users" element={<Users />} />
+            <Route path="programs" element={<Programs />} />
           </Route>
         </Routes>
       </Router>

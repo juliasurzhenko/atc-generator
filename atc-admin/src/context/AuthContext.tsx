@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = (username: string, password: string): boolean => {
-    // Тут може бути запит до API для перевірки логіну і паролю
     if (username === 'admin' && password === 'admin') {
       setIsAuthenticated(true);
       return true;

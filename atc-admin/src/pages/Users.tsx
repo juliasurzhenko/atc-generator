@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../services/userService'; // Імпортуємо функцію для отримання користувачів
 import axios from 'axios';
+import { Table, Button, Input, Form } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const Users = () => {
   const [users, setUsers] = useState<any[]>([]);
-  const [newUsername, setNewUsername] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [newEmail, setNewEmail] = useState('');
 
   const fetchUsers = async () => {
     const fetchedUsers = await getUsers();
@@ -14,20 +13,15 @@ const Users = () => {
   };
 
   // Функція для додавання нового користувача
-  const handleAddUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleAddUser = async (values: { username: string; password: string; email: string }) => {
     const newUser = {
-      username: newUsername,
-      password: newPassword,
-      email: newEmail,
+      username: values.username,
+      password: values.password,
+      email: values.email,
     };
 
     try {
       await axios.post('http://localhost:3000/api/users', newUser);  // API запит на додавання користувача
-      setNewUsername('');
-      setNewPassword('');
-      setNewEmail('');
       await fetchUsers();  // Оновлення списку користувачів після додавання
     } catch (error) {
       console.error('Error adding user:', error);
@@ -46,67 +40,73 @@ const Users = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []); // Only runs once when the component is mounted
+  }, []); 
+
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      className: 'text-center',
+    },
+    {
+      title: 'Логін',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Дії',
+      key: 'actions',
+      render: (text: string, record: any) => (
+        <Button
+          type="primary"
+          icon={<DeleteOutlined />}
+          onClick={() => handleDeleteUser(record.id)}
+        >
+          Видалити
+        </Button>
+      ),
+    },
+  ];
 
   return (
-    <div>
+    <div className=''>
       <h2 className="text-2xl mb-4">Користувачі</h2>
 
       {/* Форма для додавання нового користувача */}
-      <form onSubmit={handleAddUser} className="mb-6">
-        <input
-          type="text"
-          placeholder="Логін"
-          value={newUsername}
-          onChange={(e) => setNewUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Пароль"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
-          required
-        />
-        <button type="submit">Додати користувача</button>
-      </form>
-
+      <Form onFinish={handleAddUser} className="flex mb-6 w-full">
+          <Form.Item label="Логін" name="username" rules={[{ required: true, message: 'Будь ласка, введіть логін!' }]}>
+            <Input
+              type="text"
+              placeholder="Логін"
+            />
+          </Form.Item>
+          <Form.Item label="Пароль" name="password" rules={[{ required: true, message: 'Будь ласка, введіть пароль!' }]}>
+            <Input.Password
+              placeholder="Пароль"
+            />
+          </Form.Item>
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Будь ласка, введіть email!' }]}>
+            <Input
+              type="email"
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Button type="primary" htmlType="submit">Додати користувача</Button>
+      </Form>
       {/* Таблиця для відображення користувачів */}
-      <table className="min-w-full mt-6 border-collapse">
-        <thead>
-          <tr>
-            <th className="border-b py-2 px-4">ID</th>
-            <th className="border-b py-2 px-4">Логін</th>
-            <th className="border-b py-2 px-4">Email</th>
-            <th className="border-b py-2 px-4">Дії</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length === 0 ? (
-            <tr>
-              <td colSpan={4} className="text-center py-4">Немає користувачів</td>
-            </tr>
-          ) : (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td className="border-b py-2 px-4">{user.id}</td>
-                <td className="border-b py-2 px-4">{user.username}</td>
-                <td className="border-b py-2 px-4">{user.email}</td>
-                <td className="border-b py-2 px-4">
-                  <button onClick={() => handleDeleteUser(user.id)}>Видалити</button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <Table
+        dataSource={users}
+        columns={columns}
+        rowKey="id"
+        pagination={false}
+        className="mt-6"
+      />
     </div>
   );
 };

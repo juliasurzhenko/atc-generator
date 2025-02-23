@@ -16,12 +16,12 @@ const Sidebar = () => {
             Користувачі
           </Link>
         </li>
-        {/* <li>
+        <li>
           <Link to="/dashboard/programs" className='block py-2 hover:bg-gray-700 rounded'>
             Програми
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link to="/dashboard/participants" className='block py-2 hover:bg-gray-700 rounded'>
             Дані учасників
           </Link>
