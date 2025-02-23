@@ -19,22 +19,31 @@ const Programs = () => {
     }
   };
 
-  // Додавання нової програми
-  const handleAddProgram = async (values: any) => {
+  // Додавання або оновлення програми
+  const handleAddOrUpdateProgram = async (values: any) => {
     try {
       const formData = new FormData();
-      formData.append('name', values.name);
+      formData.append('program_name', values.name);
       if (selectedFile) {
         formData.append('file', selectedFile);
       }
-      await axios.post('http://localhost:3000/api/programs', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      message.success('Програма додана');
+
+      if (editingProgram) {
+        // Оновлення програми
+        await axios.put(`http://localhost:3000/api/programs/${editingProgram.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        message.success('Програма оновлена');
+      } else {
+        // Додавання нової програми
+        await axios.post('http://localhost:3000/api/programs', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        message.success('Програма додана');
+      }
+
       setShowModal(false);
       setSelectedFile(null);
       fetchPrograms(); // Оновлення списку програм
     } catch (error) {
-      console.error('Error adding program:', error);
-      message.error('Помилка при додаванні програми');
+      console.error('Error adding/updating program:', error);
+      message.error('Помилка при додаванні/оновленні програми');
     }
   };
 
@@ -69,19 +78,15 @@ const Programs = () => {
   // Колонки для таблиці
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Назва', dataIndex: 'name', key: 'name' },
+    { title: 'Назва', dataIndex: 'program_name', key: 'program_name' },
     {
       title: 'Файл',
-      dataIndex: 'files',
-      key: 'files',
-      render: (files: any[]) => (
-        <div>
-          {files && files.map((file: any) => (
-            <a href={`http://localhost:3000/uploads/${file.filename}`} key={file.id} target="_blank" rel="noopener noreferrer">
-              {file.filename}
-            </a>
-          ))}
-        </div>
+      dataIndex: 'filename',
+      key: 'filename',
+      render: (filename: string) => (
+        <a href={`http://localhost:3000/api/programs/${filename}`} target="_blank" rel="noopener noreferrer">
+          {filename}
+        </a>
       ),
     },
     {
@@ -114,8 +119,8 @@ const Programs = () => {
         footer={null}
       >
         <Form
-          initialValues={{ name: editingProgram?.name }}
-          onFinish={handleAddProgram}
+          initialValues={{ name: editingProgram?.program_name }}
+          onFinish={handleAddOrUpdateProgram}
         >
           <Form.Item
             label="Назва"
