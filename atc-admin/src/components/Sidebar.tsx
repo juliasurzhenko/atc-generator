@@ -9,6 +9,11 @@ const Sidebar = () => {
       <ul className='flex-1'>
         {/* Інші пункти меню */}
         <li>
+          <Link to="/dashboard/generation" className='block py-2 hover:bg-gray-700 rounded'>
+            Сторінка генерації
+          </Link>
+        </li>
+        <li>
           <Link to="/dashboard/programs" className='block py-2 hover:bg-gray-700 rounded'>
             Програми
           </Link>
