@@ -8,7 +8,8 @@ const pool = mysql.createPool({
     database: 'generator',
     waitForConnections: true,
     connectionLimit: 10,  // Максимальна кількість одночасних з'єднань
-    queueLimit: 0
+    queueLimit: 0,
+    charset: 'utf8mb4'
 });
 
 pool.getConnection()

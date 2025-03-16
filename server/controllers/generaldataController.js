@@ -5,7 +5,7 @@ const pool = require('../models/db');
  */
 const getAllGeneralData = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT id, filename_participants, uploaded_at FROM generaldata');
+        const [rows] = await pool.query('SELECT id, participants_filename, template_filename, uploaded_at FROM generaldata');
         res.json(rows);
     } catch (error) {
         console.error('❌ Помилка отримання файлів:', error);
@@ -25,13 +25,15 @@ const uploadFiles = async (req, res) => {
         const participantsFile = req.files['participantsFile'][0];
         const templateFile = req.files['templateFile'][0];
 
+        console.log("📂 Отримано файли:", participantsFile.originalname, templateFile.originalname);
+
         const sql = `
-            INSERT INTO generaldata (filename_participants, participants_filedata, filename_template, template_filedata) 
+            INSERT INTO generaldata (participants_filename, participants_filedata, template_filename, template_filedata) 
             VALUES (?, ?, ?, ?)
         `;
         await pool.query(sql, [
-            participantsFile.originalname, participantsFile.buffer,
-            templateFile.originalname, templateFile.buffer
+            participantsFile.originalname, Buffer.from(participantsFile.buffer),
+            templateFile.originalname, Buffer.from(templateFile.buffer)
         ]);
 
         res.json({ message: '✅ Файли успішно завантажені' });
@@ -47,6 +49,8 @@ const uploadFiles = async (req, res) => {
 const downloadFileById = async (req, res) => {
     try {
         const { id } = req.params;
+        const { type } = req.query; // отримуємо тип файлу ('participants' або 'template')
+
         const [rows] = await pool.query('SELECT * FROM generaldata WHERE id = ?', [id]);
 
         if (rows.length === 0) {
@@ -54,9 +58,21 @@ const downloadFileById = async (req, res) => {
         }
 
         const file = rows[0];
-        res.setHeader('Content-Disposition', `attachment; filename="${file.filename_participants}"`);
+
+        let filename, filedata;
+        if (type === 'participants') {
+            filename = file.participants_filename;
+            filedata = file.participants_filedata;
+        } else if (type === 'template') {
+            filename = file.template_filename;
+            filedata = file.template_filedata;
+        } else {
+            return res.status(400).json({ error: 'Некоректний тип файлу' });
+        }
+
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
         res.setHeader('Content-Type', 'application/octet-stream');
-        res.send(file.participants_filedata);
+        res.send(filedata);
     } catch (error) {
         console.error('❌ Помилка отримання файлу:', error);
         res.status(500).json({ error: 'Помилка сервера' });

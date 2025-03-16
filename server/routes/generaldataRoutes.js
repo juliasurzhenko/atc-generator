@@ -5,7 +5,7 @@ const generaldataController = require('../controllers/generaldataController');
 
 // ⚡️ Налаштування `multer`
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, encoding: 'utf8' });
 
 // 📌 CRUD Маршрути
 router.get('/', generaldataController.getAllGeneralData);
