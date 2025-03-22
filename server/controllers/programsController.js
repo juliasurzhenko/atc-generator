@@ -5,7 +5,7 @@ const pool = require("../models/db");
  */
 const getAllPrograms = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT id, program_name, filename, uploaded_at FROM programs");
+        const [rows] = await pool.query("SELECT id, program_name, results, uploaded_at FROM programs");
         res.json(rows);
     } catch (error) {
         console.error("❌ Помилка отримання програм:", error);
@@ -18,13 +18,11 @@ const getAllPrograms = async (req, res) => {
  */
 const createProgram = async (req, res) => {
     try {
-        const { program_name } = req.body;
-        const filename = req.file.originalname;
-        const filedata = req.file.buffer;
+        const { program_name, results } = req.body;
 
         const [result] = await pool.query(
-            "INSERT INTO programs (program_name, filename, filedata) VALUES (?, ?, ?)",
-            [program_name, filename, filedata]
+            "INSERT INTO programs (program_name, results) VALUES (?, ?)",
+            [program_name, results]
         );
 
         res.json({ message: "✅ Програму створено", id: result.insertId });
@@ -59,18 +57,15 @@ const getProgramById = async (req, res) => {
 const updateProgram = async (req, res) => {
     try {
         const { id } = req.params;
-        const { program_name } = req.body;
-        let filename = req.file ? req.file.originalname : null;
-        let filedata = req.file ? req.file.buffer : null;
+        const { program_name, results } = req.body;
 
         const query = `
             UPDATE programs
             SET program_name = ?, 
-                filename = ?, 
-                filedata = ?
+                results = ?
             WHERE id = ?
         `;
-        const [result] = await pool.query(query, [program_name, filename, filedata, id]);
+        const [result] = await pool.query(query, [program_name, results, id]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: "Програму не знайдено" });
@@ -102,7 +97,6 @@ const deleteProgram = async (req, res) => {
     }
 };
 
-// Експортуємо всі функції
 module.exports = {
     getAllPrograms,
     createProgram,
