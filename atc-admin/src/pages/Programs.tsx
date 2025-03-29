@@ -6,6 +6,7 @@ const Programs = () => {
   const [programs, setPrograms] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingProgram, setEditingProgram] = useState<any>(null);
+  const [form] = Form.useForm(); // Додаємо форму для керування станом
 
   // Завантаження списку програм
   const fetchPrograms = async () => {
@@ -23,16 +24,16 @@ const Programs = () => {
       const payload = { program_name: values.name, results: values.results };
 
       if (editingProgram) {
-        // Оновлення програми
         await axios.put(`http://localhost:3000/api/programs/${editingProgram.id}`, payload);
         message.success("Програма оновлена");
       } else {
-        // Додавання нової програми
         await axios.post("http://localhost:3000/api/programs", payload);
         message.success("Програма додана");
       }
 
       setShowModal(false);
+      setEditingProgram(null);
+      form.resetFields(); // Очищаємо форму
       fetchPrograms(); // Оновлення списку програм
     } catch (error) {
       console.error("Помилка при додаванні/оновленні програми:", error);
@@ -55,12 +56,24 @@ const Programs = () => {
   // Відкриття модального вікна для редагування
   const handleEditProgram = (program: any) => {
     setEditingProgram(program);
+    form.setFieldsValue({
+      name: program.program_name,
+      results: program.results,
+    }); // Заповнюємо поля форми
+    setShowModal(true);
+  };
+
+  // Відкриття модального вікна для додавання
+  const handleOpenAddModal = () => {
+    setEditingProgram(null);
+    form.resetFields(); // Очищаємо форму перед створенням нової програми
     setShowModal(true);
   };
 
   const handleCancelModal = () => {
     setShowModal(false);
     setEditingProgram(null);
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -69,7 +82,11 @@ const Programs = () => {
 
   // Колонки для таблиці
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
+    {
+      title: "№",
+      key: "index",
+      render: (_: any, __: any, index: number) => index + 1, // Додаємо індекс
+    },
     { title: "Назва", dataIndex: "program_name", key: "program_name" },
     { title: "Опис", dataIndex: "results", key: "results" },
     {
@@ -88,7 +105,7 @@ const Programs = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={() => setShowModal(true)}>Додати програму</Button>
+      <Button type="primary" onClick={handleOpenAddModal}>Додати програму</Button>
       <Table columns={columns} dataSource={programs} rowKey="id" pagination={false} />
 
       {/* Модальне вікно */}
@@ -98,7 +115,7 @@ const Programs = () => {
         onCancel={handleCancelModal}
         footer={null}
       >
-        <Form initialValues={editingProgram} onFinish={handleAddOrUpdateProgram}>
+        <Form form={form} onFinish={handleAddOrUpdateProgram}>
           <Form.Item
             label="Назва"
             name="name"

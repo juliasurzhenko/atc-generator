@@ -25,7 +25,7 @@ const uploadFiles = async (req, res) => {
         const participantsFile = req.files['participantsFile'][0];
         const templateFile = req.files['templateFile'][0];
 
-        console.log("📂 Отримано файли:", participantsFile.originalname, templateFile.originalname);
+        // console.log("📂 Отримано файли:", participantsFile.originalname, templateFile.originalname);
 
         const sql = `
             INSERT INTO generaldata (participants_filename, participants_filedata, template_filename, template_filedata) 

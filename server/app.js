@@ -5,6 +5,7 @@ const generaldataRoutes = require('./routes/generaldataRoutes'); // CRUD для 
 const programsRoutes = require('./routes/programsRoutes'); // CRUD для programs
 // const programFilesRoutes = require('./routes/programFilesRoutes'); // CRUD для program_files
 const generationRoutes = require('./routes/generationRoutes'); // Генерація сертифікатів
+const cerificatesRoutes = require('./routes/certificatesRoutes'); // Getting сертифікатів by id
 const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/authRoutes');
 
@@ -18,7 +19,8 @@ app.use(cors()); // Дозволяє CORS
 // 🔹 Маршрути API
 app.use('/api/generaldata', generaldataRoutes);
 // app.use('/api/programs', programsRoutes);
-app.use('/api/certificates', generationRoutes);
+app.use('/api/generation', generationRoutes);
+app.use('/api/certificates', cerificatesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api', authRoutes);
 app.use("/api/programs", programsRoutes);
