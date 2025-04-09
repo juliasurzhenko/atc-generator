@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Programs from './pages/Programs';
 import GenerationPage from './pages/GenerationPage';
+import PrivateRoute from './routes/PrivateRoute';
 
 
 const App = () => {
@@ -17,6 +18,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          {/* <Route element={<PrivateRoute />}>
+            <Route path="/dashboard/users" element={<Dashboard />} />
+          </Route> */}
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="users" element={<Users />} />
             <Route path="programs" element={<Programs />} />

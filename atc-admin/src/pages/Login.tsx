@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     const success = await login(username, password);
     if (success) {
-      navigate('/dashboard/users'); 
+      navigate('/dashboard/users');
     } else {
       alert('Невірний логін або пароль');
     }
@@ -28,7 +28,7 @@ const Login = () => {
             placeholder="Логін"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className='p-2 border border-gray-300 rounded  text-black'
+            className='p-2 border border-gray-300 rounded text-black'
           />
           <input
             type="password"

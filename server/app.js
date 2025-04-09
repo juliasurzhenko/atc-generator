@@ -14,7 +14,14 @@ const app = express();
 // 🔹 Middleware
 app.use(express.json()); // Декодує JSON у запитах
 app.use(express.urlencoded({ extended: true })); // Для обробки form-data
-app.use(cors()); // Дозволяє CORS
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Дозволяє передавати cookies та заголовки авторизації
+    allowedHeaders: 'Content-Type,Authorization', // Дозволені заголовки
+  };
+  
+app.use(cors(corsOptions));
 
 // 🔹 Маршрути API
 app.use('/api/generaldata', generaldataRoutes);
@@ -22,7 +29,7 @@ app.use('/api/generaldata', generaldataRoutes);
 app.use('/api/generation', generationRoutes);
 app.use('/api/certificates', cerificatesRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use("/api/programs", programsRoutes);
 
 // 🔹 Запуск сервера
