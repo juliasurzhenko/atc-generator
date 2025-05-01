@@ -1,17 +1,20 @@
 // src/pages/Dashboard.tsx
 import Sidebar from '../components/Sidebar';
-import { Outlet } from 'react-router-dom'; // Для відображення вкладених компонентів
+import { Navigate, Outlet } from 'react-router-dom'; // Для відображення вкладених компонентів
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
-  return (
-    <div className='flex'>
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? 
+  // <Outlet /> 
+  <div className='flex p-4 bg-gray-200'>
       <Sidebar />
-      <div className='flex-1 p-6'>
-        {/* <h1 className='text-3xl mb-6'>Добрий день, адмін!</h1> */}
-        <Outlet /> {/* Тут відображатимуться вкладені сторінки */}
+      <div className='flex-1 m-8'>
+        {/* <Navigate to="/dashboard/users" /> */}
+        <Outlet />
       </div>
     </div>
-  );
+  : <Navigate to="/login" />;
 };
 
 export default Dashboard;

@@ -7,7 +7,7 @@ const pool = mysql.createPool({
     password: 'qwerty123',
     database: 'generator',
     waitForConnections: true,
-    connectionLimit: 10,  // Максимальна кількість одночасних з'єднань
+    connectionLimit: 10, 
     queueLimit: 0,
     charset: 'utf8mb4'
 });
@@ -15,7 +15,7 @@ const pool = mysql.createPool({
 pool.getConnection()
     .then((conn) => {
         console.log('✅ Успішне підключення до MySQL');
-        conn.release(); // Відпускаємо з'єднання
+        conn.release();
     })
     .catch((err) => {
         console.error('❌ Помилка підключення до MySQL:', err.message);

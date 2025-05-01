@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer'); // Для завантаження файлів
 const router = express.Router();
-const generaldataController = require('../controllers/generaldataController');
+const generaldataController = require('../../controllers/generaldataController');
 
 // ⚡️ Налаштування `multer`
 const storage = multer.memoryStorage();

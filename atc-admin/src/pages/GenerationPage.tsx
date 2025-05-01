@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Upload, Button, Table, message } from 'antd';
 import { UploadOutlined, DownloadOutlined, DeleteOutlined, FileZipOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { Divider } from "antd";
+import { RcFile } from 'antd/es/upload';
 
 const GenerationPage: React.FC = () => {
   const [files, setFiles] = useState<{ id: number; participants_filename: string; template_filename: string }[]>([]);
@@ -136,17 +138,50 @@ const GenerationPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl mb-4">Генерація сертифікатів</h2>
+      <h2 className="text-2xl mb-4">Сторінка генерації сертифікатів</h2>
+      <Divider />
 
-      <Upload beforeUpload={(file) => { setParticipantsFile(file as File); return false; }} showUploadList={true}>
-        <Button icon={<UploadOutlined />}>Завантажити Excel-файл</Button>
-      </Upload>
-      <Upload beforeUpload={(file) => { setTemplateFile(file as File); return false; }} showUploadList={true}>
-        <Button icon={<UploadOutlined />}>Завантажити шаблон (.docx)</Button>
-      </Upload>
-      <Button type="primary" onClick={handleUpload} style={{ marginTop: 16 }}>
-        Завантажити файли
-      </Button>
+      <div className='flex gap-4 items-center my-6'>
+        <Upload 
+          beforeUpload={(file: RcFile) => {
+            const isXLSX = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            if (!isXLSX) {
+              message.error('Потрібно завантажити файл формату .xlsx');
+              return Upload.LIST_IGNORE;
+            }
+      
+            setParticipantsFile(file);
+            return false; // Запобігає автоматичному завантаженню
+          }}
+          showUploadList={{ showRemoveIcon: true }}
+          maxCount={1}      
+        >
+          <Button icon={<UploadOutlined />}>Завантажити файл із учасниками</Button>
+        </Upload>
+        <Upload 
+          beforeUpload={(file: RcFile) => {
+            const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+            if (!isDOCX) {
+              message.error('Потрібно завантажити файл формату .docx');
+              return Upload.LIST_IGNORE;
+            }
+      
+            setTemplateFile(file);
+            return false;
+          }}
+          showUploadList={{ showRemoveIcon: true }}
+          maxCount={1}
+        >
+          <Button icon={<UploadOutlined />}>
+            Завантажити шаблон сертифікату
+          </Button>
+        </Upload>
+        <Button type="primary" onClick={handleUpload} className='shadow-xl'>
+          Підвантажити файли для генерації
+        </Button>        
+      </div>
+      <Divider />
+
 
       <Table 
         dataSource={files.map((file, index) => ({ ...file, key: file.id || index }))}
@@ -183,7 +218,7 @@ const GenerationPage: React.FC = () => {
           title="Дії"
           key="actions"
           render={(_, record) => (
-            <>
+            <div className='grid gap-3 place-content-center '>
               <Button icon={<DownloadOutlined />} onClick={() => downloadFile(record.id, record.participants_filename, 'participants')}>
                 Завантажити учасників
               </Button>
@@ -193,7 +228,7 @@ const GenerationPage: React.FC = () => {
               <Button danger icon={<DeleteOutlined />} onClick={() => deleteFile(record.id)} style={{ marginLeft: 8 }}>
                 Видалити
               </Button>
-            </>
+            </div>
           )}
         />
         {/* Додатковий стовпець для генерації сертифікатів */}
@@ -216,7 +251,7 @@ const GenerationPage: React.FC = () => {
           key="certificates"
           render={(_, record) => (
             generatedCertificates[record.id] ? (
-              <Button icon={<FileZipOutlined />} onClick={() => downloadCertificatesZip(record.id)} style={{ marginTop: 8 }}>
+              <Button icon={<FileZipOutlined />} onClick={() => downloadCertificatesZip(record.id)} style={{ marginTop: 8 }} >
                 Завантажити ZIP
               </Button>
             ) : (

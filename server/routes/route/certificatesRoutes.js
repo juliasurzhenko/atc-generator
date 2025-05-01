@@ -1,5 +1,5 @@
 const express = require("express");
-const {getCertificatesByGeneralDataId} = require("../controllers/certificatesController");
+const {getCertificatesByGeneralDataId} = require("../../controllers/certificatesController");
 
 const router = express.Router();
 

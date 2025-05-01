@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, Form, message } from "antd";
+import { Table, Button, Input, Modal, Form, message, Divider } from "antd";
 import axios from "axios";
 
 const Programs = () => {
@@ -88,12 +88,20 @@ const Programs = () => {
       render: (_: any, __: any, index: number) => index + 1, // Додаємо індекс
     },
     { title: "Назва", dataIndex: "program_name", key: "program_name" },
-    { title: "Опис", dataIndex: "results", key: "results" },
+    { title: "Опис", 
+      dataIndex: "results", 
+      key: "results",
+      render: (text: string) => (
+        <span>
+          {text.length > 100 ? `${text.slice(0, 100)}...` : text}
+        </span>
+      ),
+    },
     {
       title: "Дії",
       key: "actions",
       render: (text: string, record: any) => (
-        <div>
+        <div className='grid gap-3 place-content-center '>
           <Button onClick={() => handleEditProgram(record)} style={{ marginRight: "8px" }}>
             Редагувати
           </Button>
@@ -105,7 +113,12 @@ const Programs = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={handleOpenAddModal}>Додати програму</Button>
+      <h2 className="text-2xl mb-4">Сторінка програм підвищення кваліфікації</h2>
+
+      <Divider />
+        <Button type="primary" onClick={handleOpenAddModal} size="large" className="w-full my-2">Додати програму</Button>
+      <Divider />
+      
       <Table columns={columns} dataSource={programs} rowKey="id" pagination={false} />
 
       {/* Модальне вікно */}

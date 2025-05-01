@@ -1,5 +1,5 @@
 const express = require('express');
-const { generateCertificatesHandler } = require('../services/generationService');
+const { generateCertificatesHandler } = require('../../services/generationService');
 // const {getCertificatesByGeneralDataId} = require("../controllers/certificatesController");
 
 const router = express.Router();

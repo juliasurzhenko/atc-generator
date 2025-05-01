@@ -23,7 +23,7 @@ const login = async (req, res) => {
 
   try {
     const [result] = await pool.query(`SELECT * FROM users WHERE username = ?`, [username]);
-    console.log(`----> ${JSON.stringify(result, null, 2)}`);
+    // console.log(`----> ${JSON.stringify(result, null, 2)}`);
 
     if (result.length === 0) {
       console.warn("⚠️ Користувача не знайдено");
@@ -42,7 +42,7 @@ const login = async (req, res) => {
 
     // Генерація JWT-токену
     const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '1m',
     });
 
     console.log("✅ Авторизація успішна, токен:", token);

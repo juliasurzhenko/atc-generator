@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../services/userService'; // Імпортуємо функцію для отримання користувачів
 import axios from 'axios';
-import { Table, Button, Input, Form } from 'antd';
+import { Table, Button, Input, Form, Divider } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const Users = () => {
@@ -76,10 +76,10 @@ const Users = () => {
 
   return (
     <div className=''>
-      <h2 className="text-2xl mb-4">Користувачі</h2>
-
+      <h2 className="text-2xl mb-4">Сторінка адміністраторів</h2>
+      <Divider />
       {/* Форма для додавання нового користувача */}
-      <Form onFinish={handleAddUser} className="flex mb-6 w-full">
+      <Form onFinish={handleAddUser} className="flex mb-6 gap-4 w-full">
           <Form.Item label="Логін" name="username" rules={[{ required: true, message: 'Будь ласка, введіть логін!' }]}>
             <Input
               type="text"
@@ -97,8 +97,10 @@ const Users = () => {
               placeholder="Email"
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit">Додати користувача</Button>
+          <Button type="primary" htmlType="submit">Додати адміністратора</Button>
       </Form>
+      <Divider />
+      
       {/* Таблиця для відображення користувачів */}
       <Table
         dataSource={users}

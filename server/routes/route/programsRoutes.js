@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const programsController = require("../controllers/programsController");
+const programsController = require("../../controllers/programsController");
 
 // 📌 CRUD Маршрути для програм
 router.get("/", programsController.getAllPrograms); // Отримати всі програми

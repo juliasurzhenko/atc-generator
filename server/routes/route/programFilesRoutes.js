@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const programFilesController = require("../controllers/programFilesController");
+const programFilesController = require("../../controllers/programFilesController");
 
 // ⚡️ Налаштування `multer`
 const storage = multer.memoryStorage();
