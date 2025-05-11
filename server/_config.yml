@@ -1,0 +1,15 @@
+# _config.yml
+title: atc-server
+description: backend for generator
+theme: jekyll-theme-primer
+
+# ВАЖЛИВО: виключаємо node_modules і все, що не має оброблятись
+exclude:
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - package.json
+  - yarn.lock
+  - README.md
+  - .github
