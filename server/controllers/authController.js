@@ -23,7 +23,6 @@ const login = async (req, res) => {
 
   try {
     const [result] = await pool.query(`SELECT * FROM users WHERE username = ?`, [username]);
-    // console.log(`----> ${JSON.stringify(result, null, 2)}`);
 
     if (result.length === 0) {
       console.warn("⚠️ Користувача не знайдено");
@@ -33,16 +32,14 @@ const login = async (req, res) => {
     const user = result[0];
     console.log("👤 Користувач знайдений:", user);
 
-    // Перевірка пароля
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.warn("⚠️ Невірний пароль");
       return res.status(400).json({ message: 'Невірний логін або пароль' });
     }
 
-    // Генерація JWT-токену
     const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
-      expiresIn: '1m',
+      expiresIn: '2m',
     });
 
     console.log("✅ Авторизація успішна, токен:", token);
@@ -55,13 +52,17 @@ const login = async (req, res) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];
+  
   if (!token) {
     return res.status(401).json({ message: 'Необхідний токен' });
   }
 
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+  jwt.verify(token.split(' ')[1], SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: 'Недійсний або прострочений токен' });
+      if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({ message: 'Токен прострочено' });
+      }
+      return res.status(401).json({ message: 'Недійсний токен' });
     }
     req.user = decoded;
     next();

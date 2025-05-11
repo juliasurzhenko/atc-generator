@@ -8,9 +8,9 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard'); // Перенаправлення на адмін панель
+      navigate('/dashboard/users');
     } else {
-      navigate('/login'); // Перенаправлення на сторінку входу
+      navigate('/login');
     }
   }, [isAuthenticated, navigate]);
 

@@ -1,8 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Divider } from "antd";
 import { LogoutOutlined , DatabaseOutlined, FileDoneOutlined, UserOutlined } from '@ant-design/icons';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    console.log('logout');
+    
+    localStorage.removeItem('token');
+    navigate('/login')
+  };
+
   return (
     <div className='rounded-3xl shadow-xl w-64 bg-gray-700 text-white min-w-[200px] xl:min-w-[300px] min-h-screen p-6 flex flex-col '>
       <h2 className='text-3xl '>Адмін-панель</h2>
@@ -36,7 +45,10 @@ const Sidebar = () => {
 
         {/* Кнопка логаут */}
         <div className='mt-4'>
-          <button className='w-full py-2 gap-5 flex shadow-xl bg-red-600 hover:bg-red-700 rounded-xl text-2xl text-white justify-center'>
+          <button 
+            onClick={logout}
+            className='w-full py-2 gap-5 flex shadow-xl bg-red-600 hover:bg-red-700 rounded-xl text-2xl text-white justify-center'
+          >
             <LogoutOutlined />
             Вихід
           </button>
