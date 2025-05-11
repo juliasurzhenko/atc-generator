@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Button, Input, Modal, Form, message, Divider } from "antd";
 import axios from "axios";
 
@@ -100,7 +100,7 @@ const Programs = () => {
     {
       title: "Дії",
       key: "actions",
-      render: (text: string, record: any) => (
+      render: (_text: string, record: any) => (
         <div className='grid gap-3 place-content-center '>
           <Button onClick={() => handleEditProgram(record)} style={{ marginRight: "8px" }}>
             Редагувати

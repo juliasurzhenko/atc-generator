@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getUsers } from '../services/userService'; // Імпортуємо функцію для отримання користувачів
 import axios from 'axios';
 import { Table, Button, Input, Form, Divider } from 'antd';
@@ -62,7 +62,7 @@ const Users = () => {
     {
       title: 'Дії',
       key: 'actions',
-      render: (text: string, record: any) => (
+      render: (_text: string, record: any) => (
         <Button
           type="primary"
           icon={<DeleteOutlined />}
