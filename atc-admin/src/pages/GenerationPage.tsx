@@ -23,7 +23,7 @@ const GenerationPage: React.FC = () => {
   const fetchFiles = async () => {
     try {
       // Отримуємо список файлів
-      const response = await axios.get('http://localhost:3000/api/generaldata');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/generaldata`);
       console.log(response.data);
       
       setFiles(response.data);
@@ -31,7 +31,7 @@ const GenerationPage: React.FC = () => {
       // Запускаємо всі запити одночасно
       const certPromises = response.data.map(async (file: { id: number }) => {
         try {
-          const certResponse = await axios.get(`http://localhost:3000/api/certificates/generaldata/${file.id}`);
+          const certResponse = await axios.get(`${import.meta.env.VITE_API_URL}/certificates/generaldata/${file.id}`);
           return { id: file.id, hasCertificates: certResponse.data.length > 0 };
         } catch (err) {
           console.error(`Помилка отримання сертифікатів для файлу ${file.id}:`, err);
@@ -67,7 +67,7 @@ const GenerationPage: React.FC = () => {
     formData.append('templateFile', templateFile);
 
     try {
-      await axios.post('http://localhost:3000/api/generaldata/upload', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/generaldata/upload`, formData);
       message.success('Файли успішно завантажені');
       fetchFiles();
     } catch (error) {
@@ -78,7 +78,7 @@ const GenerationPage: React.FC = () => {
 
   const downloadFile = async (id: number, filename: string, type: 'participants' | 'template') => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/generaldata/${id}/download?type=${type}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/generaldata/${id}/download?type=${type}`, {
         responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -96,7 +96,7 @@ const GenerationPage: React.FC = () => {
 
   const deleteFile = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:3000/api/generaldata/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/generaldata/${id}`);
       message.success('Файл видалено');
       fetchFiles();
     } catch (error) {
@@ -107,7 +107,7 @@ const GenerationPage: React.FC = () => {
 
   const generateCertificates = async (id: number) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/generation/generate/${id}`);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/generation/generate/${id}`);
       message.success('✅ Сертифікати згенеровані!');
       console.log(response.data);
     } catch (error) {
@@ -117,7 +117,7 @@ const GenerationPage: React.FC = () => {
 
   const downloadCertificatesZip = async (id: number) => {
     try {
-        const response = await axios.get(`http://localhost:3000/api/certificates/generaldata/${id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/certificates/generaldata/${id}`, {
             responseType: 'blob', // 🔹 Важливо! Вказуємо, що отримуємо файл
         });
 

@@ -21,7 +21,7 @@ const Users = () => {
     };
 
     try {
-      await axios.post('http://localhost:3000/api/users', newUser);  // API запит на додавання користувача
+      await axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser);  // API запит на додавання користувача
       await fetchUsers();  // Оновлення списку користувачів після додавання
     } catch (error) {
       console.error('Error adding user:', error);
@@ -31,7 +31,7 @@ const Users = () => {
   // Функція для видалення користувача
   const handleDeleteUser = async (userId: number) => {
     try {
-      await axios.delete(`http://localhost:3000/api/users/${userId}`);  // API запит на видалення користувача
+      await axios.delete(`${import.meta.env.VITE_API_URL}/users/${userId}`);  // API запит на видалення користувача
       await fetchUsers();  // Оновлення списку користувачів після видалення
     } catch (error) {
       console.error('Error deleting user:', error);

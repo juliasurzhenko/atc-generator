@@ -11,7 +11,7 @@ const Programs = () => {
   // Завантаження списку програм
   const fetchPrograms = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/api/programs");
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/programs`);
       setPrograms(data);
     } catch (error) {
       console.error("Помилка отримання програм:", error);
@@ -24,10 +24,10 @@ const Programs = () => {
       const payload = { program_name: values.name, results: values.results };
 
       if (editingProgram) {
-        await axios.put(`http://localhost:3000/api/programs/${editingProgram.id}`, payload);
+        await axios.put(`${import.meta.env.VITE_API_URL}/programs/${editingProgram.id}`, payload);
         message.success("Програма оновлена");
       } else {
-        await axios.post("http://localhost:3000/api/programs", payload);
+        await axios.post(`${import.meta.env.VITE_API_URL}/programs`, payload);
         message.success("Програма додана");
       }
 
@@ -44,7 +44,7 @@ const Programs = () => {
   // Видалення програми
   const handleDeleteProgram = async (programId: number) => {
     try {
-      await axios.delete(`http://localhost:3000/api/programs/${programId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/programs/${programId}`);
       message.success("Програма видалена");
       fetchPrograms();
     } catch (error) {
