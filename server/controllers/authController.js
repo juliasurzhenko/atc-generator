@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require("../models/db");
 
-const SECRET_KEY = 'bb5b3baa4137e48c42547a4eac2117f1bf5fb6ac7a2569472340fa5efc84afd1'; // Змініть на реальний секретний ключ
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const login = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
