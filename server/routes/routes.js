@@ -11,6 +11,7 @@ const router = express.Router();
 
 // 🔓 Публічні маршрути
 router.use('/auth', authRoutes);
+router.use('/users', usersRoutes);
 
 // 🔐 Приватні маршрути — захищені middleware
 router.use(authController.verifyToken);
@@ -18,6 +19,5 @@ router.use('/generaldata', generaldataRoutes);
 router.use('/programs', programsRoutes);
 router.use('/generation', generationRoutes);
 router.use('/certificates', certificatesRoutes);
-router.use('/users', usersRoutes);
 
 module.exports = router;
