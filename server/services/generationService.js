@@ -26,7 +26,10 @@ async function getParticipantsData() {
         name: row["Ім'я"],
         surname: row["Прізвище"],
         third_name: row["По батькові"],
-        program: row["Найменування програми"]
+        program: row["Найменування програми"],
+        start_date: row["Дата зарахування"],
+        end_date: row["Дата завершення"],
+        grade: row["Оцінка"],
     }));
 }
 
@@ -89,9 +92,11 @@ const generateCertificates = async (generaldata_id) => {
             doc.render({
                 name: `${participant.surname} ${participant.name} ${participant.third_name}`,
                 speciality: participant.program,
-                grade: "Result: 85 points", // Replace with actual grade if needed
+                grade: participant.grade,
                 program: participant.program,
                 results: programData.expectedResults,
+                start_date: programData.start_date,
+                end_date: programData.end_date,
             });
 
             // Generate the certificate file
