@@ -112,16 +112,13 @@ id, user_id, program_id, filename, generated_at
 
 🚀 Встановлення
 1. Клонувати репозиторій
-bash
-Копіювати
-Редагувати
+
 git clone https://github.com/your-username/certificate-generator.git
 cd certificate-generator
+
 2. Налаштувати .env
 Backend (server/.env)
-ini
-Копіювати
-Редагувати
+
 PORT=5000
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -129,21 +126,20 @@ DB_NAME=generator
 DB_USER=root
 DB_PASSWORD=qwerty123
 JWT_SECRET=your_jwt_secret
+
 3. Встановити залежності
-Backend
-bash
-Копіювати
-Редагувати
+Backend:
+
 cd server
 npm install
-npm run dev
-Frontend
-bash
-Копіювати
-Редагувати
+node app.js
+
+Frontend:
+
 cd client
 npm install
 npm run dev
+
 📦 Використання
 Залогінитись як адміністратор
 
@@ -165,15 +161,6 @@ npm run dev
 Паролі зберігаються з хешуванням (bcrypt).
 
 Input-валідація на бекенді та фронтенді.
-
-☁️ Розгортання
-Backend можна розгорнути через Docker або на VPS:
-
-bash
-Копіювати
-Редагувати
-docker-compose up --build
-Frontend можна задеплоїти на Netlify або Vercel (npm run build)
 
 📬 Контакти
 Автор: Surzhenko Yuliia
