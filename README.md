@@ -178,5 +178,5 @@ Frontend можна задеплоїти на Netlify або Vercel (npm run bui
 📬 Контакти
 Автор: Surzhenko Yuliia
 Email: surzhenkoyulia@gmail.com
-GitHub: https://github.com/your-username
+GitHub: https://github.com/juliasurzhenko
 
