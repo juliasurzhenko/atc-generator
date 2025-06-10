@@ -92,10 +92,13 @@ const Programs = () => {
       dataIndex: "results", 
       key: "results",
       render: (text: string) => (
-        <span>
-          {text.length > 100 ? `${text.slice(0, 100)}...` : text}
-        </span>
-      ),
+        <ul style={{ paddingLeft: '1em', margin: 0 }}>
+          {text.split('\n').slice(0, 3).map((line, index) => (
+            <li key={index}>{line}</li>
+          ))}
+          {text.split('\n').length > 3 && <li>...</li>}
+        </ul>
+      )
     },
     {
       title: "Дії",

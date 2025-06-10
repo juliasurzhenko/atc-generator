@@ -26,6 +26,7 @@ async function getParticipantsData() {
         name: row["Ім'я"],
         surname: row["Прізвище"],
         third_name: row["По батькові"],
+        speciality: row["Предмет"],
         program: row["Найменування програми"],
         start_date: row["Дата зарахування"],
         end_date: row["Дата завершення"],
@@ -65,14 +66,18 @@ async function getTemplateFile() {
 /**
  * 📌 Створення DOCX сертифіката для кожного учасника
  */
+const sanitizeFileName = (name) =>
+    name.replace(/[<>:"/\\|?*]+/g, '').replace(/\s+/g, '_');
+
 const generateCertificates = async (generaldata_id) => {
     try {
         const participants = await getParticipantsData();
         const programs = await getAllProgramResults();
-        const templateBuffer = await getTemplateFile(); // Get template data
+        const templateBuffer = await getTemplateFile();
 
-        if (!fs.existsSync("certificates")) {
-            fs.mkdirSync("certificates");
+        const certificatesDir = path.join(__dirname, '..', 'certificates');
+        if (!fs.existsSync(certificatesDir)) {
+            fs.mkdirSync(certificatesDir);
         }
 
         const generatedFiles = [];
@@ -84,33 +89,37 @@ const generateCertificates = async (generaldata_id) => {
                 continue;
             }
 
-            // Load the template using PizZip
-            const zip = new PizZip(templateBuffer);
-            const doc = new Docxtemplater(zip);
+            const formattedResults = programData.expectedResults.replace(/\r?\n/g, '\n');
 
-            // Replace placeholders in the template
+            const zip = new PizZip(templateBuffer);
+            const doc = new Docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true // 💡 Це головне!
+            });
+
             doc.render({
                 name: `${participant.surname} ${participant.name} ${participant.third_name}`,
                 speciality: participant.program,
                 grade: participant.grade,
                 program: participant.program,
-                results: programData.expectedResults,
+                results: formattedResults, // передаємо з \n
                 start_date: programData.start_date,
                 end_date: programData.end_date,
             });
 
-            // Generate the certificate file
-            const buffer = doc.getZip().generate({ type: "nodebuffer" });
-            const fileName = `certificates/${participant.surname}_${participant.name}_${participant.third_name}.docx`;
-            fs.writeFileSync(fileName, buffer);
+            const buffer = doc.getZip().generate({ type: 'nodebuffer' });
 
-            generatedFiles.push({ participant, fileName });
+            const safeFileName = sanitizeFileName(`${participant.surname}_${participant.name}_${participant.third_name}.docx`);
+            const filePath = path.join(certificatesDir, safeFileName);
 
-            // Save the certificate to the database
+            fs.writeFileSync(filePath, buffer);
+
             await pool.query(
                 "INSERT INTO certificates (generaldata_id, certificate_filename, certificate_filedata) VALUES (?, ?, ?)",
-                [generaldata_id, path.basename(fileName), buffer]
+                [generaldata_id, safeFileName, buffer]
             );
+
+            generatedFiles.push({ participant, filePath });
         }
 
         return generatedFiles;

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -30,13 +33,23 @@ const Login = () => {
             onChange={(e) => setUsername(e.target.value)}
             className='p-2 border border-gray-300 rounded text-black'
           />
-          <input
-            type="password"
-            placeholder="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='p-2 border border-gray-300 rounded text-black'
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='p-2 border border-gray-300 rounded text-black pr-10'
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            </button>
+          </div>
           <button 
             type="submit"
             className='p-2 bg-blue-500 text-white rounded hover:bg-blue-600'
